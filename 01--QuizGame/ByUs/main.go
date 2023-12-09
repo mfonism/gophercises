@@ -2,10 +2,12 @@ package main
 
 import (
 	"encoding/csv"
+	"flag"
 	"fmt"
 	"io"
 	"log"
 	"os"
+	"runtime/debug"
 )
 
 type QuizUnit struct {
@@ -14,7 +16,10 @@ type QuizUnit struct {
 }
 
 func main() {
-	quizUnits := readQuizUnits("problemss.csv")
+	filename := flag.String("f", "problems.csv", "path to csv quiz data")
+	flag.Parse()
+
+	quizUnits := readQuizUnits(*filename)
 	fmt.Printf("Quiz Units: %v", quizUnits)
 }
 
@@ -22,7 +27,8 @@ func readQuizUnits(filename string) []QuizUnit {
 	data, err := os.Open(filename)
 
 	if err != nil {
-		log.Fatalf("Error reading file:\n%s", err)
+		errorMessage := fmt.Sprintf("Error reading file: %s\n%s", err.Error(), debug.Stack())
+		log.Output(2, errorMessage)
 	}
 
 	defer data.Close()
