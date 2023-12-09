@@ -28,7 +28,7 @@ func main() {
 		fmt.Printf("\nQ%d: %s = ", i+1, qunit.question)
 		fmt.Scanln(&userResponse)
 
-		if userResponse == qunit.answer {
+		if userResponse != "" && userResponse == qunit.answer {
 			score++
 		}
 	}
