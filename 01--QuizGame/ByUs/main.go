@@ -14,12 +14,12 @@ type QuizUnit struct {
 }
 
 func main() {
-	quizUnits := readQuizUnits()
+	quizUnits := readQuizUnits("problems.csv")
 	fmt.Printf("Quiz Units: %v", quizUnits)
 }
 
-func readQuizUnits() []QuizUnit {
-	data, err := os.Open("./problems.csv")
+func readQuizUnits(filename string) []QuizUnit {
+	data, err := os.Open(filename)
 	if err != nil {
 		log.Fatalf("Error reading file:\n%s", err)
 	}
