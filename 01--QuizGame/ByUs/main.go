@@ -20,7 +20,21 @@ func main() {
 	flag.Parse()
 
 	quizUnits := readQuizUnits(*filename)
-	fmt.Printf("Quiz Units: %v", quizUnits)
+	score := 0
+
+	for i, qunit := range quizUnits {
+		userResponse := ""
+
+		fmt.Printf("\nQ%d: %s = ", i+1, qunit.question)
+		fmt.Scanln(&userResponse)
+
+		if userResponse == qunit.answer {
+			score ++
+		}
+	}
+
+	fmt.Print("\nCongratulations on completing the quiz!\n")
+	fmt.Print("Your score is: ", score, " out of ", len(quizUnits))
 }
 
 func readQuizUnits(filename string) []QuizUnit {
