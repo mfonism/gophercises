@@ -29,7 +29,7 @@ func main() {
 		fmt.Scanln(&userResponse)
 
 		if userResponse == qunit.answer {
-			score ++
+			score++
 		}
 	}
 
