@@ -59,6 +59,10 @@ func readQuizUnits(filename string) []QuizUnit {
 			log.Fatalf("Error reading line in file:\n%s", err)
 		}
 
+		if line[0] == "" || line[1] == "" {
+			continue
+		}
+
 		quizUnits = append(quizUnits, QuizUnit{
 			question: line[0],
 			answer:   line[1],
