@@ -14,15 +14,18 @@ type QuizUnit struct {
 }
 
 func main() {
-	quizUnits := readQuizUnits("problems.csv")
+	quizUnits := readQuizUnits("problemss.csv")
 	fmt.Printf("Quiz Units: %v", quizUnits)
 }
 
 func readQuizUnits(filename string) []QuizUnit {
 	data, err := os.Open(filename)
+
 	if err != nil {
 		log.Fatalf("Error reading file:\n%s", err)
 	}
+
+	defer data.Close()
 
 	reader := csv.NewReader(data)
 
