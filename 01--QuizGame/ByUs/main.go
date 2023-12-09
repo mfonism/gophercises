@@ -8,6 +8,11 @@ import (
 	"os"
 )
 
+type QuizUnit struct {
+	question string
+	answer   string
+}
+
 func main() {
 	data, err := os.Open("./problems.csv")
 	if err != nil {
@@ -27,7 +32,12 @@ func main() {
 			return
 		}
 
-		fmt.Printf("%v", line)
+		quizUnit := QuizUnit{
+			question: line[0],
+			answer:   line[1],
+		}
+
+		fmt.Printf("%v", quizUnit)
 	}
 
 }
