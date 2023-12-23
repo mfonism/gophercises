@@ -19,6 +19,8 @@ type QuizUnit struct {
 
 func main() {
 	filename := flag.String("f", "problems.csv", "path to csv quiz data")
+	timePerQuestion := flag.Int("t", 5, "time per question, in seconds")
+
 	flag.Parse()
 
 	quizUnits := readQuizUnits(*filename)
@@ -31,14 +33,12 @@ func main() {
 
 		select {
 		case userResponse := <-responseChan:
-			fmt.Println("you entered: ", userResponse)
 			if userResponse != "" && strings.TrimSpace(userResponse) == qunit.answer {
 				score++
 			}
-			continue
 
-		case <-time.After(5 * time.Second):
-			continue
+		case <-time.After(time.Duration(*timePerQuestion) * time.Second):
+			fmt.Println("\nTime elapsed for that question!")
 		}
 	}
 
