@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"runtime/debug"
+	"strings"
 )
 
 type QuizUnit struct {
@@ -23,18 +24,22 @@ func main() {
 	score := 0
 
 	for i, qunit := range quizUnits {
-		userResponse := ""
-
-		fmt.Printf("\nQ%d: %s = ", i+1, qunit.question)
-		fmt.Scanln(&userResponse)
-
-		if userResponse != "" && userResponse == qunit.answer {
+		if userResponse := askQuestion(i+1, qunit.question); userResponse != "" && strings.TrimSpace(userResponse) == qunit.answer {
 			score++
 		}
 	}
 
 	fmt.Print("\nCongratulations on completing the quiz!\n")
 	fmt.Print("Your score is: ", score, " out of ", len(quizUnits))
+}
+
+func askQuestion(questionNumber int, question string) string {
+	userResponse := ""
+
+	fmt.Printf("\nQ%d: %s = ", questionNumber, question)
+	fmt.Scanln(&userResponse)
+
+	return userResponse
 }
 
 func readQuizUnits(filename string) []QuizUnit {
