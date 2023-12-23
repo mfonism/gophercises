@@ -9,6 +9,7 @@ import (
 	"os"
 	"runtime/debug"
 	"strings"
+	"time"
 )
 
 type QuizUnit struct {
@@ -24,8 +25,22 @@ func main() {
 	score := 0
 
 	for i, qunit := range quizUnits {
-		if userResponse := askQuestion(i+1, qunit.question); userResponse != "" && strings.TrimSpace(userResponse) == qunit.answer {
-			score++
+		responseChan := make(chan string, 1)
+		timerChan := make(chan struct{}, 1)
+
+		go askQuestion(i, qunit.question, responseChan)
+		go timer(5, timerChan)
+
+		select {
+		case userResponse := <-responseChan:
+			fmt.Println("you entered: ", userResponse)
+			if userResponse != "" && strings.TrimSpace(userResponse) == qunit.answer {
+				score++
+			}
+			continue
+
+		case <-timerChan:
+			continue
 		}
 	}
 
@@ -33,13 +48,18 @@ func main() {
 	fmt.Print("Your score is: ", score, " out of ", len(quizUnits))
 }
 
-func askQuestion(questionNumber int, question string) string {
+func askQuestion(questionNumber int, question string, c chan string) {
 	userResponse := ""
 
 	fmt.Printf("\nQ%d: %s = ", questionNumber, question)
 	fmt.Scanln(&userResponse)
 
-	return userResponse
+	c <- userResponse
+}
+
+func timer(seconds int, c chan struct{}) {
+	time.Sleep(time.Duration(seconds) * time.Second)
+	c <- struct{}{}
 }
 
 func readQuizUnits(filename string) []QuizUnit {
