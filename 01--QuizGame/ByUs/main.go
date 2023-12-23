@@ -26,10 +26,8 @@ func main() {
 
 	for i, qunit := range quizUnits {
 		responseChan := make(chan string, 1)
-		timerChan := make(chan struct{}, 1)
 
 		go askQuestion(i, qunit.question, responseChan)
-		go timer(5, timerChan)
 
 		select {
 		case userResponse := <-responseChan:
@@ -39,7 +37,7 @@ func main() {
 			}
 			continue
 
-		case <-timerChan:
+		case <-time.After(5 * time.Second):
 			continue
 		}
 	}
@@ -55,11 +53,6 @@ func askQuestion(questionNumber int, question string, c chan string) {
 	fmt.Scanln(&userResponse)
 
 	c <- userResponse
-}
-
-func timer(seconds int, c chan struct{}) {
-	time.Sleep(time.Duration(seconds) * time.Second)
-	c <- struct{}{}
 }
 
 func readQuizUnits(filename string) []QuizUnit {
